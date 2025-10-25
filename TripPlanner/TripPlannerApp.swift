@@ -13,7 +13,7 @@ struct TripPlannerApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TripFormView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
