@@ -13,6 +13,8 @@ struct TripMapView: View {
     @StateObject private var routeVM = RouteViewModel()
     @State private var region = MKCoordinateRegion()
     
+    let routeColors: [Color] = [.blue, .green, .orange, .red, .purple, .pink, .teal]
+    
     var body: some View {
         Map(position: .constant(.region(region))) {
             // Markers for each place
@@ -36,10 +38,10 @@ struct TripMapView: View {
             }
 
             // Draw the real driving routes
-            ForEach(routeVM.routes, id: \.self) { route in
+            ForEach(Array(routeVM.routes.enumerated()), id: \.element) { index, route in
                 MapPolyline(route.polyline)
                     .stroke(
-                        .blue,
+                        routeColors[index % routeColors.count],
                         style: StrokeStyle(
                             lineWidth: 4,
                             lineCap: .round,

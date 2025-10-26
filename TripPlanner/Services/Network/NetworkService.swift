@@ -31,8 +31,10 @@ class TripService {
         }
         
         print(String(data: data, encoding: .utf8) ?? "Invalid JSON")
-
-        let res = try JSONDecoder().decode(PlanDetails.self, from: data)
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        
+        let res = try decoder.decode(PlanDetails.self, from: data)
         return res
     }
 }

@@ -10,6 +10,7 @@ import CoreLocation
 
 struct PlanDetails: Identifiable, Codable {
     var id: String = ""
+    var startDate: String = ""
     var title: String = ""
     var days: [DayPlan] = []
 }

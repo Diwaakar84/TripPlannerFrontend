@@ -18,6 +18,17 @@ struct TripResultView: View {
                     .font(.largeTitle.bold())
                     .padding(.bottom, 10)
                 
+                HStack {
+                    Text("Best starting date: ")
+                        .font(.title3.bold())
+                        .padding(.bottom, 10)
+                    
+                    Text(trip.startDate)
+                        .font(.title3)
+                        .padding(.bottom, 10)
+                }
+                
+                
                 ForEach(trip.days) { day in
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Day \(day.day)")
