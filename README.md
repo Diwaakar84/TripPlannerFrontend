@@ -4,6 +4,8 @@
 An intelligent travel planner app built with **Swift** and **SwiftUI**, powered by **FastAPI + Gemini** on the backend.  
 It generates personalized trip itineraries with weather-aware insights to recommend the best travel dates.
 
+[Link to Backend](https://github.com/Diwaakar84/TripPlannerBackend)
+
 ---
 
 ## 🧩 Features
