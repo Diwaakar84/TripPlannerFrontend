@@ -35,6 +35,8 @@ class TripService {
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         
         let res = try decoder.decode(PlanDetails.self, from: data)
+        
+        CoreDataManager.shared.saveTrip(plan: res)
         return res
     }
 }

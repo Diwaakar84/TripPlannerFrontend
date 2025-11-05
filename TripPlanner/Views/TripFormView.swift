@@ -13,6 +13,7 @@ struct TripFormView: View {
     var body: some View {
         NavigationStack {
             Form {
+                // MARK: - New trip generation
                 Section("Trip Details") {
                     TextField("Destination", text: $viewModel.destination)
                     Stepper(
@@ -35,13 +36,31 @@ struct TripFormView: View {
                     .disabled(viewModel.destination.isEmpty)
                 }
                 
+                // MARK: - Error message
                 Section {
                     if let error = viewModel.errorMessage {
                         Text(error)
                     }
                 }
+                
+                // MARK: - Saved Trips Section
+                if !viewModel.savedTrips.isEmpty {
+                    Section("Saved Trips") {
+                        ForEach(viewModel.savedTrips) { trip in
+                            NavigationLink(destination: TripResultView(trip: trip, location: trip.title)) {
+                                VStack(alignment: .leading) {
+                                    Text(trip.title)
+                                        .font(.headline)
+                                }
+                            }
+                        }
+                    }
+                }
             }
-            .navigationTitle("AI Trip Planner")
+            .navigationTitle("Trip Planner")
+            .onAppear {
+                viewModel.fetchSavedTrips()
+            }
             .navigationDestination(isPresented: .constant(viewModel.trip != nil)) {
                 if let trip = viewModel.trip {
                     TripResultView(

@@ -14,37 +14,27 @@ struct TripResultView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Text(location)
-                    .font(.largeTitle.bold())
-                    .padding(.bottom, 10)
                 
-                HStack {
-                    Text("Best starting date: ")
-                        .font(.title3.bold())
-                        .padding(.bottom, 10)
-                    
-                    Text(trip.startDate)
-                        .font(.title3)
-                        .padding(.bottom, 10)
-                }
-                
-                
-                ForEach(trip.days) { day in
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Day \(day.day)")
-                            .font(.headline)
-                        Text(day.summary)
-                            .font(.subheadline)
-                        TripMapView(places: day.places)
-                            .frame(height: 250)
-                            .cornerRadius(12)
+                ScrollView(showsIndicators: false) {
+                    LazyVStack {
+                        ForEach(trip.days) { day in
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Day \(day.day)")
+                                    .font(.headline)
+                                Text(day.summary)
+                                    .font(.subheadline)
+                                TripMapView(places: day.places)
+                                    .frame(height: 250)
+                                    .cornerRadius(12)
+                            }
+                            .padding(.vertical)
+                        }
                     }
-                    .padding(.vertical)
                 }
             }
             .padding()
         }
-        .navigationTitle("Your Trip")
+        .navigationTitle(trip.title)
     }
 }
 

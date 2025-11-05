@@ -15,6 +15,7 @@ class TripViewModel: ObservableObject {
     @Published var trip: PlanDetails? = nil
     @Published var isLoading = false
     @Published var errorMessage: String? = nil
+    @Published var savedTrips: [PlanDetails] = []
     
     private let service = TripService()
     
@@ -32,5 +33,9 @@ class TripViewModel: ObservableObject {
             print(error)
             self.errorMessage = error.localizedDescription
         }
+    }
+    
+    func fetchSavedTrips() {
+        savedTrips = CoreDataManager.shared.fetchTrips()
     }
 }
