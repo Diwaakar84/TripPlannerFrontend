@@ -9,6 +9,10 @@ import SwiftUI
 
 struct TripFormView: View {
     @StateObject private var viewModel = TripViewModel()
+    @EnvironmentObject private var notificationService: NotificationService
+    
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var navigateToTrip: PlanDetails? = nil
     
     var body: some View {
         NavigationStack {
@@ -25,7 +29,11 @@ struct TripFormView: View {
                 
                 Section {
                     Button {
-                        Task { await viewModel.generateTrip() }
+                        Task {
+                            await viewModel.generateTrip { trip in
+                                navigateToTrip = trip
+                            }
+                        }
                     } label: {
                         if viewModel.isLoading {
                             ProgressView()
@@ -61,13 +69,27 @@ struct TripFormView: View {
             .onAppear {
                 viewModel.fetchSavedTrips()
             }
-            .navigationDestination(isPresented: .constant(viewModel.trip != nil)) {
-                if let trip = viewModel.trip {
-                    TripResultView(
-                        trip: trip,
-                        location: viewModel.destination
-                    )
+            .onChange(of: scenePhase) { newPhase in
+                // When the app state changes to active check if opened app
+                // through notification and if any trip is stored to open
+                if(newPhase == .active) {
+                    if let tripID = UserDefaults.standard.string(forKey: "lastTappedTripID") {
+                        print("Found trip")
+                        if let trip = viewModel.savedTrips.first(where: { $0.id == tripID }) {
+                            print("navigating")
+                            navigateToTrip = trip
+                            
+                            // Clear the value stored to prevent redirecting again
+                            UserDefaults.standard.removeObject(forKey: "lastTappedTripID")
+                        }
+                    }
                 }
+            }
+            .navigationDestination(item: $navigateToTrip) { trip in
+                TripResultView(
+                    trip: trip,
+                    location: viewModel.destination
+                )
             }
         }
     }

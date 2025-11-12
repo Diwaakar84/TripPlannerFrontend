@@ -12,14 +12,13 @@ import Combine
 class TripViewModel: ObservableObject {
     @Published var destination = ""
     @Published var days = 3
-    @Published var trip: PlanDetails? = nil
     @Published var isLoading = false
     @Published var errorMessage: String? = nil
     @Published var savedTrips: [PlanDetails] = []
     
     private let service = TripService()
     
-    func generateTrip() async {
+    func generateTrip(completion: (_ trip: PlanDetails) -> Void) async {
         isLoading = true
         defer { isLoading = false }
         
@@ -28,7 +27,14 @@ class TripViewModel: ObservableObject {
                 location: destination,
                 days: days
             )
-            self.trip = result
+            
+            // Send notification to user once the trip is generated
+            NotificationService.shared.tripGeneratedNotification(
+                id: result.id,
+                title: result.title
+            )
+            
+            completion(result)
         } catch {
             print(error)
             self.errorMessage = error.localizedDescription
